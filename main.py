@@ -1,4 +1,5 @@
 import simpy
+import logging
 
 # Constants
 QUEUES = 1
@@ -15,6 +16,13 @@ INITIAL_STADIUM_POPULATION = 2000
 service_time = 3 / 60  # Amount of time to check a person's ticket and grant access. To be sampled from a distribution later.
 arrival_rate = 20 / 60  # Number of people arriving to plaza every minute.              ^^^
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 
 # Environment
 class Stadium(object):
@@ -22,8 +30,11 @@ class Stadium(object):
         self.plazas = [Plaza(env, self, "North Plaza")]  # Directly initialize the list with the Plaza object
         self.capacity = STADIUM_CAPACITY
         self.population = INITIAL_STADIUM_POPULATION
+        logger.info(f"The stadium has {self.population} people seated")
         for plaza in self.plazas:
-            plaza.arrivals()  # Needs to be async I'd say
+            for turnstile in plaza.turnstiles:
+                turnstile.process_spectator()
+            # plaza.arrivals()  # Needs to be async I'd say
 
 
 class Plaza(object):
@@ -34,11 +45,14 @@ class Plaza(object):
         self.capacity = PLAZA_CAPACITY
         self.population = INITIAL_PLAZA_POPULATION
         self.turnstiles = [Turnstile(env, self, "Turnstile A")]
+        logger.info(f"Plaza:  {self.name} has {self.population} people")
 
     def arrivals(self):
         while True:
+            logger.info(f"Spectator arrived at {self.env.now}")
             self.population += 1
-            yield self.env.timeout(arrival_rate)  # Something like this anyway
+            logger.info(f"Plaza {self.name} has {self.population} people")
+            # yield self.env.timeout(arrival_rate)  # Something like this anyway
 
 
 class Turnstile:
@@ -53,11 +67,14 @@ class Turnstile:
         self.process_time = service_time
 
     def process_spectator(self):
+        logger.info(f"Began processing spectator at {self.env.now}")
         self.env.timeout(self.process_time)
         self.admit_spectator()
 
     def admit_spectator(self):
+        logger.info(f"Spectator admitted at {self.env.now}")
         self.plaza.stadium.population += 1  # This is a bit weird the way it is called. Can refactor later. Stadium has turnstiles, that have queues, that have plazas?
+        logger.info(f"The stadium has {self.plaza.stadium.population} people seated")
         self.queues[0].turnstile_free()
 
 
@@ -70,7 +87,9 @@ class Queue(object):
         self.population = initial_pop
 
     def turnstile_free(self):
+        logger.info(f"Queue moved at {self.env.now}")
         self.plaza.population -= 1  # This is kind of hacky, but don't think it needs to any more complicated for us.
+        logger.info(f"Plaza: {self.plaza.name} has {self.plaza.population} people")
         # Should collect stat here. Timestamps maybe?
         self.turnstile.process_spectator()
 
@@ -81,11 +100,11 @@ class Queue(object):
 
 # Set up the environment
 stadium_env = simpy.Environment()
+stadium = Stadium(stadium_env)
 
-stadium_env.run(until=10)
+stadium_env.run()
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    stadium_env.run(until=10)
+    stadium_env.run()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/

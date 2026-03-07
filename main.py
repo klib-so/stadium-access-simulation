@@ -58,15 +58,16 @@ class Plaza(object):
         yield self.env.timeout(arrival_rate)  # Something like this anyway
 
 
-class Turnstile:
-    def __init__(self, env, plaza, name):
+class Turnstile(simpy.Resource):
+    def __init__(self, env, plaza, name, capacity=1):
+        super().__init__(env, capacity)
         self.ID = name
         self.env = env
         self.plaza = plaza
         self.queues = [
             Queue(self.env, self.plaza, self, QUEUE_CAPACITY,
                   QUEUE_CAPACITY)]  # Can be turned into a loop if we want more.
-        self.capacity = 1
+        # self.capacity = 1  This is an attribute of simpy.Resource
         self.process_time = service_time
 
     def process_spectator(self):
@@ -98,10 +99,6 @@ class Queue(object):
             # logger.info(f"Plaza: {self.plaza.name} has {self.plaza.population} people")
         # Should collect stat here. Timestamps maybe?
         self.turnstile.process_spectator()
-
-        # Probably queues should be a resource
-        # Leave this till the classes look right. We can probably extend the simpy classes.
-        # self.turnstile = simpy.Resource(env, QUEUES)
 
 
 # Set up the environment

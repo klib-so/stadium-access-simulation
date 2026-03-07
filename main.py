@@ -14,7 +14,7 @@ INITIAL_STADIUM_POPULATION = 2000
 # Variables
 # Giving time units as proportions of a minute. Will need to standardise this later.
 service_time = 3 / 60  # Amount of time to check a person's ticket and grant access. To be sampled from a distribution later.
-arrival_rate = 20 / 60  # Number of people arriving to plaza every minute.              ^^^
+arrival_rate = 20 / 60  # Number of people arriving to plaza every minute.           ^^^
 
 # Configure logging
 logging.basicConfig(
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 # Environment
 class Stadium(object):
     def __init__(self, env):
-        self.plazas = [Plaza(env, self, "North Plaza")]  # Directly initialize the list with the Plaza object
+        self.plazas = [Plaza(env, self, "North Plaza")]  # Directly initialise the list with the Plaza object
         self.capacity = STADIUM_CAPACITY
         self.population = INITIAL_STADIUM_POPULATION
         logger.info(f"The stadium has {self.population} people seated")

@@ -15,7 +15,7 @@ INITIAL_STADIUM_POPULATION = 2000
 
 # Variables
 # Giving time units as proportions of a minute. Will need to standardise this later.
-service_time = 3  # Amount of time to check a person's ticket and grant access. To be sampled from a distribution later.
+service_time = 5  # Amount of time to check a person's ticket and grant access. To be sampled from a distribution later.
 arrival_rate = 20 / 60  # Number of people arriving to plaza every second.           ^^^
 start_time = 17 * 60 * 60  # 17:00
 end_time = 19 * 60 * 60
@@ -37,16 +37,16 @@ class Stadium(object):
         logger.debug(f"The stadium has {self.population} people seated")
         self.plazas = [Plaza(env, self, "North")]  # Directly initialise the list with the Plaza object
 
-    def open_gates(self):
-        while (
-                (self.plazas[0].population <= PLAZA_CAPACITY)
-                and (self.population < TICKETS_SOLD)
-                and (self.env.now <= end_time)
-        ):
-            for plaza in self.plazas:
-                for turnstile in plaza.turnstiles:
-                    yield self.env.process(turnstile.process_spectator())
-                    yield self.env.process(plaza.arrivals())  # Needs to be async I'd say
+    # def open_gates(self):
+    #     while (
+    #             (self.plazas[0].population <= PLAZA_CAPACITY)
+    #             and (self.population < TICKETS_SOLD)
+    #     ):
+    #         for plaza in self.plazas:
+    #             for turnstile in plaza.turnstiles:
+    #                 for en in turnstile.process_spectator():
+    #                     yield en
+    #                 # yield next(plaza.arrivals())  # Needs to be async I'd say
 
 
 class Plaza(object):
@@ -61,7 +61,7 @@ class Plaza(object):
 
     def arrivals(self):
         while True:
-            yield self.env.timeout(arrival_rate)  # Something like this anyway
+            yield self.env.timeout(1/arrival_rate)  # Something like this anyway
             logger.debug(f"Spectator arrived at {format_time(self.env.now)}")
             self.population += 1
             logger.debug(f"{self.name} plaza has {self.population} people")
@@ -106,12 +106,14 @@ class Queue(object):
 
     def move_queue(self):
         logger.debug(f"Queue for {self.turnstile.ID} in {self.plaza.name} plaza moved at {format_time(self.env.now)}")
-        self.plaza.population -= 1  # This is kind of hacky, but don't think it needs to be any more complicated for us.
+        self.plaza.population -= 1  # This is kind of hacky, but don't think it needs to any more complicated for us.
         if True:  # self.plaza.population % 10 == 0:
             # pass
             logger.debug(f"{self.plaza.name} plaza has {self.plaza.population} people")
         # Should collect stat here. Timestamps maybe?
-        self.turnstile.process_spectator()
+        # with self.turnstile.request() as req:
+        #     yield req
+        #     # yield self.env.process(self.turnstile.process_spectator())
 
 
 # Helper Functions
@@ -127,9 +129,10 @@ def format_time(timestamp):
 # Set up the environment
 stadium_env = simpy.RealtimeEnvironment(initial_time=start_time, factor=.008, strict=False)  # Small factors increase the speed. Turning strict off allows very small values.
 stadium = Stadium(stadium_env)
-stadium_env.process(stadium.open_gates())
-stadium_env.run()
+stadium_env.process(stadium.plazas[0].turnstile.process_spectator())
+stadium_env.process(stadium.plazas[0].arrivals())
+stadium_env.run(until=end_time)
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    stadium_env.run()
+    stadium_env.run(until=end_time)

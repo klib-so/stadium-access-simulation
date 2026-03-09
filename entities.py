@@ -2,6 +2,7 @@ import simpy
 import logging
 import functions as fn
 import configuration as cfg
+from configuration import TICKETS_SOLD
 
 # Configure logging
 logging.basicConfig(
@@ -17,7 +18,7 @@ class Stadium(object):
         self.env = env
         self.capacity = cfg.STADIUM_CAPACITY
         self.population = cfg.INITIAL_STADIUM_POPULATION
-        logger.debug(f"The stadium has {self.population} people seated")
+        logger.debug(f"The stadium has {fn.format_percent(self.population/cfg.TICKETS_SOLD)} of people seated")
         self.plazas = [Plaza(env, self, "North")]  # Directly initialise the list with the Plaza object
 
     # def open_gates(self):
@@ -39,7 +40,7 @@ class Plaza(object):
         self.stadium = stadium
         self.capacity = cfg.PLAZA_CAPACITY
         self.population = cfg.INITIAL_PLAZA_POPULATION
-        self.turnstile = Turnstile(env, self, "Turnstile A", capacity=1)
+        self.turnstile = Turnstile(env, self, "Turnstile", capacity=1)
         logger.debug(f"{self.name} plaza has {self.population} people")
 
     def arrivals(self):
@@ -74,7 +75,7 @@ class Turnstile(simpy.Resource):
         # Stadium has turnstiles, that have queues, that have plazas?
 
         if True:  # self.plaza.stadium.population % 10 == 0:
-            logger.debug(f"The stadium has {self.plaza.stadium.population} people seated")
+            logger.debug(f"The stadium has {fn.format_percent(self.plaza.stadium.population/cfg.TICKETS_SOLD)} people seated")
         # self.release(request)
         self.queues[0].move_queue()  # Emit event here
 

@@ -1,3 +1,7 @@
+# Log level
+# log_level = "DEBUG"  # Looks like an enum
+
+
 # Constants
 QUEUES = 1
 QUEUE_CAPACITY = 300

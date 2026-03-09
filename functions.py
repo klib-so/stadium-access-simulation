@@ -10,3 +10,8 @@ def format_time(timestamp):
     # minute = ((time % 10000) - (time % 100))//100
     # second = time % 100
     # return f"{hour}:{minute}:{second}"
+
+
+def format_percent(num):
+    adj = '%s' % float('%.2g' % (num*100))
+    return f"{adj}%"

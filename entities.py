@@ -45,7 +45,8 @@ class Plaza(object):
 
     def arrivals(self):
         while True:
-            yield self.env.timeout(1/cfg.arrival_rate)  # Something like this anyway
+            # logger.debug(f"get_arrival_interval() return value is {fn.get_arrival_interval(self.env.now)}")
+            yield self.env.timeout(fn.get_arrival_interval(self.env.now))  # Something like this anyway
             logger.debug(f"Spectator arrived to {self.name} plaza at {fn.format_time(self.env.now)}")
             self.population += 1
             logger.debug(f"{self.name} plaza has {self.population} people waiting")
@@ -61,12 +62,13 @@ class Turnstile(simpy.Resource):
         for que in range(capacity):
             self.queues.append(
                 Queue(self.env, self.plaza, self, cfg.QUEUE_CAPACITY, cfg.QUEUE_CAPACITY))  # Can be turned into a loop if we want more.
-        self.process_time = cfg.service_time
+        self.min_process_time = cfg.min_service_time
 
     def process_spectator(self, queue):
         while True:
             logger.debug(f"{self.plaza.name} turnstile began processing spectator at {fn.format_time(self.env.now)}")
-            yield self.env.timeout(self.process_time)
+            # logger.debug(f"get_service_time() return value is {fn.get_service_time(self.min_process_time)}")
+            yield self.env.timeout(fn.get_service_time(self.min_process_time))
             self.admit_spectator(queue)
 
     def admit_spectator(self, queue):

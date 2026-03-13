@@ -1,5 +1,8 @@
 import math
 import time
+import numpy as np
+from scipy.stats import norm
+import configuration as cfg
 
 
 # Helper Functions
@@ -13,5 +16,17 @@ def format_time(timestamp):
 
 
 def format_percent(num):
-    adj = '%s' % float('%.2g' % (num*100))
+    adj = '%s' % float('%.2g' % (num * 100))
     return f"{adj}%"
+
+
+# Distributions
+def get_service_time(min):
+    return np.random.exponential(scale=5.0, size=None) + min
+
+
+def get_arrival_interval(current_time):
+    centre_point = cfg.mean_absolute_arrival_time
+    sd = (cfg.end_time - cfg.start_time) / 6
+    # arrivals_remaining = cfg.TICKETS_SOLD - cfg.INITIAL_STADIUM_POPULATION - cfg.TURNSTILES*len(cfg.PLAZAS)*cfg.QUEUE_CAPACITY
+    return float(1 / ((cfg.TICKETS_SOLD/len(cfg.PLAZAS)) * norm.pdf(current_time, loc=centre_point, scale=sd)))

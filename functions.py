@@ -17,7 +17,7 @@ def format_time(timestamp):
 
 
 def format_percent(num):
-    adj = '%s' % float('%.2g' % (num * 100))
+    adj = '%s' % float('%.2g' % (100 * num/cfg.TICKETS_SOLD))
     return f"{adj}%"
 
 

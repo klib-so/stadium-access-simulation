@@ -88,4 +88,4 @@ class Turnstile(simpy.Resource):
 
         if True:  # self.plaza.stadium.population % 10 == 0:
             logger.info(
-                f"The stadium has {fn.format_percent(self.plaza.stadium.population / cfg.TICKETS_SOLD)} people seated")
+                f"The stadium has {fn.format_percent(self.plaza.stadium.population)} people seated")

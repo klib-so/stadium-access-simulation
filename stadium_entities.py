@@ -54,8 +54,8 @@ class Plaza(object):
 
 
     def que_arrival(self, spec_id):
-        if len(self.turnstile.queue)/self.turnstile.capacity <= cfg.QUEUE_CAPACITY:
-            yield self.env.timeout((cfg.QUEUE_CAPACITY - len(self.turnstile.queue))/(10 * self.turnstile.capacity))  # Time to walk to join the queue.
+        # if len(self.turnstile.queue)/self.turnstile.capacity <= cfg.QUEUE_CAPACITY:
+        #     yield self.env.timeout((cfg.QUEUE_CAPACITY - len(self.turnstile.queue))/(10 * self.turnstile.capacity))  # Time to walk to join the queue.
             # This will break if we breach queue capacity!!!
         with self.turnstile.request() as req:
             logger.debug(f"Spectator {spec_id} joins que")

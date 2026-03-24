@@ -1,6 +1,7 @@
 import simpy
 import stadium_entities
 import configuration as cfg
+import functions as fn
 
 
 # Set up the environment
@@ -12,8 +13,17 @@ stadium = stadium_entities.Stadium(stadium_env)
 stadium.simulate()
 
 # Execute
-stadium_env.run(until=cfg.end_time)
-
+try:
+    stadium_env.run(until=cfg.end_time)
+except ValueError:
+    print(f"Simulation exited at {fn.format_time(stadium_env.now)} with {fn.format_percent(stadium.population)} people "
+          f"seated, and {stadium.plazas[0].population} waiting for access."
+          )
 # For commandline
 if __name__ == '__main__':
-    stadium_env.run(until=cfg.end_time)
+    try:
+        stadium_env.run(until=cfg.end_time)
+    except ValueError:
+        print(f"Simulation exited at {fn.format_time(stadium_env.now)} with {fn.format_percent(stadium.population)}"
+              f" people seated, and {stadium.plazas[0].population} waiting for access."
+              )

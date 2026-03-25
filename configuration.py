@@ -22,18 +22,28 @@ MINUTES = 60
 
 # Variables
 # Adjust these!
-arrival_standard_deviation = 9.1971
-min_service_time = 6  # Minimum amount of time (in seconds) to check a person's ticket and grant access.
+arrival_standard_deviation = 9.1971*MINUTES
+min_service_time = 3  # Minimum amount of time (in seconds) to check a person's ticket and grant access.
+service_rate = 0.14
+
 start_time = 17 * HOURS + 0 * MINUTES  # 17:00. Replace zero with minutes.
-end_time = 20 * HOURS + 45 * MINUTES
+end_time = 18 * HOURS + 30 * MINUTES
 kickoff_time = 19 * HOURS + 0 * MINUTES
 earliest_arrival = 120  # In minutes before kickoff. NOT USED
-mean_arrival_time_before_kickoff = 11.807  # In minutes.
+mean_arrival_time_before_kickoff = 40*MINUTES #11.807 * MINUTES  # In minutes.
 late_arrival_offset = 5  # In minutes after kickoff. NOT USED
 
 
 # These are computed for use in the code.
 first_arrival_absolute_time = kickoff_time - earliest_arrival * MINUTES
 last_arrival = kickoff_time + late_arrival_offset * MINUTES
-mean_absolute_arrival_time = kickoff_time - mean_arrival_time_before_kickoff * MINUTES
+mean_absolute_arrival_time = kickoff_time - mean_arrival_time_before_kickoff
+service_scale = 1/service_rate
 
+
+# Output options
+arrival_output = True
+processing_output = False
+queue_length_output = True
+stadium_population_output = False
+all_output = False

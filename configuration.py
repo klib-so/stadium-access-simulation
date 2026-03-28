@@ -11,7 +11,7 @@ INITIAL_QUEUE_POPULATION = 0  # Set these to zero to debug the distributions. Wi
 # working. Nothing major.
 PLAZA_CAPACITY = 3000  # Again, this has no effect at the moment, but would just take a few minutes to add the logic.
 INITIAL_PLAZA_POPULATION = 0  # Set these to zero to debug the distributions.
-TURNSTILES = 6  # Global number of turnstiles per plaza. Can be split out into variable per plaza if we want.
+TURNSTILES = 7  # Global number of turnstiles per plaza. Can be split out into variable per plaza if we want.
 TICKETS_SOLD = 5000  # https://www.footballwebpages.co.uk/premier-league/attendances
 STADIUM_CAPACITY = 8000  # https://en.wikipedia.org/wiki/List_of_association_football_stadiums_by_capacity
 INITIAL_STADIUM_POPULATION = 0  # Set these to zero to debug the distributions.
@@ -44,8 +44,8 @@ service_scale = 1/service_rate
 arrival_output = True
 processing_output = True
 queue_length_output = True
-stadium_population_output = False
+stadium_population_output = True
 all_output = False
 
 DATA_FIELDNAMES = ['id', 'arrival_time', 'turnstile_time', 'admission_time', 'total_wait']
-DATA_FILE = 'data/stadium_simulation_data_six_turnstiles.csv'
+DATA_FILE = f'data/stadium_simulation_data_{TURNSTILES}_turnstiles.csv'

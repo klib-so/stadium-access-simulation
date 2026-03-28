@@ -9,6 +9,9 @@ stadium_env = simpy.Environment(initial_time=cfg.start_time)  # Small factors
 # increase the speed. Turning strict off allows very small values. 0.008 seems good.
 stadium = stadium_entities.Stadium(stadium_env)
 
+# Create data file
+fn.create_data_file(cfg.DATA_FILE)
+
 # Process Simulation
 stadium.simulate()
 

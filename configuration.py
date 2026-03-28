@@ -26,7 +26,7 @@ min_service_time = 3  # Minimum amount of time (in seconds) to check a person's 
 service_rate = 0.61
 
 start_time = 17 * HOURS + 0 * MINUTES  # 17:00. Replace zero with minutes.
-end_time = 19 * HOURS + 0 * MINUTES
+end_time = 19 * HOURS + 20 * MINUTES
 kickoff_time = 19 * HOURS + 0 * MINUTES
 earliest_arrival = 120  # In minutes before kickoff. NOT USED
 mean_arrival_time_before_kickoff = 37*MINUTES #11.807 * MINUTES  # In minutes.
@@ -46,3 +46,6 @@ processing_output = True
 queue_length_output = True
 stadium_population_output = False
 all_output = False
+
+DATA_FIELDNAMES = ['id', 'arrival_time', 'turnstile_time', 'admission_time', 'total_wait']
+DATA_FILE = 'data/data.csv'

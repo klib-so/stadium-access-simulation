@@ -4,6 +4,7 @@ import numpy as np
 from scipy.stats import norm
 import configuration as cfg
 import stadium_entities
+import csv
 
 
 # Helper Functions
@@ -28,3 +29,18 @@ def get_arrival_interval(population, env_time):
     sd = cfg.arrival_standard_deviation
     return norm.ppf((population + 1) / cfg.TICKETS_SOLD, loc=centre_point, scale=sd) - env_time
 
+
+def create_data_file(filename):
+    with open(filename, 'w', newline='') as csvfile:
+        fieldnames = cfg.DATA_FIELDNAMES
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        # writer.writerow(spectator_data)
+
+
+def write_to_csv(spectator_data, filename):
+    with open(filename, 'a', newline='') as csvfile:
+        fieldnames = cfg.DATA_FIELDNAMES
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        # writer.writeheader()
+        writer.writerow(spectator_data)

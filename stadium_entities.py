@@ -11,6 +11,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+spectator_data = {}
+
 # Environment
 class Stadium(object):
     def __init__(self, env):
@@ -49,6 +51,9 @@ class Plaza(object):
             yield self.env.timeout(fn.get_arrival_interval(self.stadium.counter, self.env.now))  # Arrival interval
             self.stadium.counter += 1
             spec_id = self.stadium.counter
+            spectator_data[str(spec_id)] = {}
+            spectator_data[str(spec_id)]["id"] = spec_id
+            spectator_data[str(spec_id)]["arrival_time"] = self.env.now
             if cfg.arrival_output or cfg.all_output:
                 logger.debug(f"Spectator {spec_id} arrived at {self.name} plaza at time {fn.format_time(self.env.now)}")
             self.population += 1  # Update population count
@@ -59,9 +64,6 @@ class Plaza(object):
 
 
     def que_arrival(self, spec_id):
-        # if len(self.turnstile.queue)/self.turnstile.capacity <= cfg.QUEUE_CAPACITY:
-        #     yield self.env.timeout((cfg.QUEUE_CAPACITY - len(self.turnstile.queue))/(10 * self.turnstile.capacity))  # Time to walk to join the queue.
-            # This will break if we breach queue capacity!!!
         with self.turnstile.request() as req:
             if cfg.queue_length_output or cfg.all_output:
                 logger.debug(f"Spectator {spec_id} joins que")
@@ -82,10 +84,17 @@ class Turnstile(simpy.Resource):
 
     def process_spectator(self, spec_id):
         if self.plaza.population > 0:
+            turnstile_start = self.env.now
             if cfg.processing_output or cfg.all_output:
                 logger.debug(f"{self.plaza.name} turnstile began processing spectator {spec_id} at {fn.format_time(self.env.now)}")
             yield self.plaza.env.timeout(fn.get_service_time(self.min_process_time))
+            turnstile_time = self.env.now - turnstile_start
+            spectator_data[str(spec_id)]["turnstile_time"] = turnstile_time
+            spectator_data[str(spec_id)]["admission_time"] = self.env.now
+            spectator_data[str(spec_id)]["total_wait"] = spectator_data[str(spec_id)]["admission_time"] - spectator_data[str(spec_id)]["arrival_time"]
             self.admit_spectator(spec_id)
+            fn.write_to_csv(spectator_data[str(spec_id)], cfg.DATA_FILE)
+            del spectator_data[str(spec_id)]
 
 
     def admit_spectator(self, spec_id):

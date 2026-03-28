@@ -6,6 +6,8 @@ import configuration as cfg
 import stadium_entities
 import csv
 
+np.random.seed(53)
+
 
 # Helper Functions
 def format_time(timestamp):
@@ -42,5 +44,4 @@ def write_to_csv(spectator_data, filename):
     with open(filename, 'a', newline='') as csvfile:
         fieldnames = cfg.DATA_FIELDNAMES
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        # writer.writeheader()
         writer.writerow(spectator_data)

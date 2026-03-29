@@ -1,0 +1,57 @@
+%! Author = klib
+%! Date = 28/03/2026
+
+% Preamble
+\documentclass[11pt]{article}
+
+% Packages
+\usepackage{amsmath}
+
+% Document
+\begin{document}
+\section{Summery Findings For Large Population}\label{sec:summery-findings}
+The simulation was run through three iterations with the following fixed parameters:
+\begin{itemize}
+    \item Tickets sold: 80000
+    \item Entry Points: 10
+    \item Initial Population: 0
+    \item Simulation Start Time: 17:00
+    \item Simulation End Time: 19:20
+    \item Game Kickoff Time: 19:00
+    \item Service Time Distribution
+    \item \begin{itemize}
+              \item Type: Shifted Exponential
+              \item Minimum Service Time: 3 seconds
+              \item Service Rate (lambda): 0.61
+    \end{itemize}
+    \item Arrival Distribution
+    \begin{itemize}
+        \item Type: Normal
+        \item Free Variable: Time
+        \item Mean: 18:23 (37 minutes before kickoff)
+        \item Standard deviation: 9.2
+    \end{itemize}
+\end{itemize}
+    During each iteration the following data was collected on each spectator:
+\begin{itemize}
+    \item Arrival Time
+    \item Processing Time (time taken passing through the turnstile)
+    \item Admission Time
+    \item Total Time (total time taken from arrival to being seated)
+\end{itemize}
+    The data was collected in CSV format for statistical analysis.
+\subsection{First Iteration (6 turnstiles per entrance)}
+    The first simulation was run with six turnstiles in operation at each entrance.
+    It resulted in 55\% of ticket holders being seated before the kickoff time, with an average wait time of 14 minutes
+    and 36 seconds, and a maximum wait time of 36 minutes.
+
+    \subsection{Second Iteration (7 turnstiles per entrance)}
+    The second simulation was run with seven turnstiles in operation at each entrance.
+    It resulted in 97\% of spectators being seated at kickoff time, with an average wait time of 26 minutes and 40
+    seconds, and a maximum wait time of 1 hour 15 minutes and 25 seconds.
+
+    \subsection{Third Iteration (8 turnstiles per entrance)}
+    The third simulation was run with eight turnstiles in operation at each entrance.
+    It resulted in 100\% of spectators being seated at kickoff time, with an average wait time of 20 minutes and 10
+    seconds, and a maximum wait time of 50 minutes and 51 seconds.
+\end{document}

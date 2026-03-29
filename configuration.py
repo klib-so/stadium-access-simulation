@@ -5,15 +5,15 @@
 # Constants
 # Adjust these!
 # Adding plaza names to the list processes them automatically.
-PLAZAS = ["Main Entrance"]#, "Block B"]
+PLAZAS = ["Block A", "Block B", "Block C","Block D","Block E","Block F","Block G","Block H","Block I","Block J"]#, "Block B"]
 QUEUE_CAPACITY = 300  # This does nothing right now, but can easily be made to.
 INITIAL_QUEUE_POPULATION = 0  # Set these to zero to debug the distributions. Will require small bit of code to get
 # working. Nothing major.
 PLAZA_CAPACITY = 3000  # Again, this has no effect at the moment, but would just take a few minutes to add the logic.
 INITIAL_PLAZA_POPULATION = 0  # Set these to zero to debug the distributions.
-TURNSTILES = 7  # Global number of turnstiles per plaza. Can be split out into variable per plaza if we want.
-TICKETS_SOLD = 5000  # https://www.footballwebpages.co.uk/premier-league/attendances
-STADIUM_CAPACITY = 8000  # https://en.wikipedia.org/wiki/List_of_association_football_stadiums_by_capacity
+TURNSTILES = 8  # Global number of turnstiles per plaza. Can be split out into variable per plaza if we want.
+TICKETS_SOLD = 80000  # https://www.footballwebpages.co.uk/premier-league/attendances
+STADIUM_CAPACITY = 80000  # https://en.wikipedia.org/wiki/List_of_association_football_stadiums_by_capacity
 INITIAL_STADIUM_POPULATION = 0  # Set these to zero to debug the distributions.
 HOURS = 60 ** 2
 MINUTES = 60
@@ -48,4 +48,4 @@ stadium_population_output = True
 all_output = False
 
 DATA_FIELDNAMES = ['id', 'arrival_time', 'turnstile_time', 'admission_time', 'total_wait']
-DATA_FILE = f'data/stadium_simulation_data_{TURNSTILES}_turnstiles.csv'
+DATA_FILE = f'data/stadium_simulation_data_{TURNSTILES}_turnstiles_{TICKETS_SOLD}_tickets_sold_{len(PLAZAS)}_access_points.csv'
